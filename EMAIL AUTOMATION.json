@@ -1,0 +1,146 @@
+{
+  "name": "EMAIL AUTOMATION",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "id": "70e06045-6bad-4b60-9cd1-04f6ffe8f8d9",
+      "name": "Daily 6 AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o-mini"
+        },
+        "options": {
+          "maxTokens": 3500,
+          "temperature": 0.7
+        }
+      },
+      "id": "e963482c-844a-4bb4-9cf6-4b23b7eabed5",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        432
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "Q2VMj34kOSP4ZYv4",
+          "name": "OpenAi account"
+        }
+      },
+      "notes": "Generate the following interview questions with brief answers for each:\n\n- 3 C/C++ programming questions\n- 3 Python programming questions\n- 3 Java programming questions\n- 3 SQL questions\n- 3 Aptitude questions (logical/mathematical)\n- 3 English grammar or communication interview questions\n\nEach question should be clear and followed by a brief, correct answer.\n"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o-mini"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Generate interview questions with brief answers for the following categories:\n\n3 C/C++ programming questions\n3 Python programming questions\n3 Java programming questions\n3 SQL questions\n3 Aptitude questions (logical/mathematical)\n3 English grammar or communication interview questions\n\nFor each question, provide:\n1. A clear, well-formulated question\n2. A brief, correct answer\n\nFormat the output in a clean, readable structure with proper headings and numbering."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "051ff4ec-8106-414b-8219-914c2896f41c",
+      "name": "Generate Interview Questions",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        784,
+        208
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "wStucNb6rvXW0ko7",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "pardhivdasari1@gmail.com",
+        "subject": "=Daily Interview Questions - {{ $('Generate Interview Questions').item.json.message.content }}",
+        "emailType": "text",
+        "message": "={{ $('Generate Interview Questions').item.json.message.content }}",
+        "options": {}
+      },
+      "id": "9f1aa9af-a4c9-4c6f-b3ae-0344a0819710",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1136,
+        208
+      ],
+      "webhookId": "bbbe94ab-6e38-4573-ad63-aa3ab3fac27f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "OugJTt7Lh50smeYr",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily 6 AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Interview Questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Interview Questions": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "499c8a75-7ac6-4b43-b7dc-eacea96cda0d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ba7044b6b690b11e328a55b69a9eeacb373f8a6031037d2c0d1c604983e385b6"
+  },
+  "id": "0dD5BxMZZ4Hxsz5R",
+  "tags": []
+}
